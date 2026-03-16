@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aether Weather — Immersive Nature Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="weather-sunny" id="app-body">
+
+  <!-- Animated Background Layer -->
+  <div class="bg-scene" id="bg-scene">
+    <div class="sky-layer" id="sky-layer"></div>
+
+    <div class="sun" id="sun">
+      <div class="sun-core"></div>
+      <div class="sun-glow"></div>
+      <div class="sun-rays" id="sun-rays">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="moon" id="moon">
+      <div class="moon-core"></div>
+      <div class="moon-glow"></div>
+    </div>
+
+    <div class="stars-layer" id="stars-layer"></div>
+    <div class="fireflies-layer" id="fireflies-layer"></div>
+
+    <div class="clouds-layer" id="clouds-layer">
+      <div class="cloud cloud-1"></div>
+      <div class="cloud cloud-2"></div>
+      <div class="cloud cloud-3"></div>
+      <div class="cloud cloud-4"></div>
+    </div>
+
+    <div class="rain-layer" id="rain-layer"></div>
+    <div class="rain-glass" id="rain-glass"></div>
+    <div class="lightning" id="lightning"></div>
+    <div class="wind-particles" id="wind-particles"></div>
+
+    <div class="fog-layer" id="fog-layer">
+      <div class="fog fog-1"></div>
+      <div class="fog fog-2"></div>
+    </div>
+
+    <div class="trees-layer" id="trees-layer">
+      <div class="tree tree-left">
+        <div class="tree-trunk"></div>
+        <div class="tree-canopy"></div>
+        <div class="tree-canopy tree-canopy-2"></div>
+      </div>
+      <div class="tree tree-right">
+        <div class="tree-trunk"></div>
+        <div class="tree-canopy"></div>
+        <div class="tree-canopy tree-canopy-2"></div>
+      </div>
+    </div>
+
+    <div class="ground-layer" id="ground-layer"></div>
+  </div>
+
+  <!-- Sound Engine Controls -->
+  <div class="sound-control" id="sound-control">
+    <button class="sound-btn" id="sound-btn" onclick="toggleSound()" title="Toggle Sound">
+      <svg id="sound-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+      </svg>
+      <svg id="sound-icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>
+    </button>
+    <div class="volume-slider-wrap">
+      <input type="range" id="volume-slider" min="0" max="100" value="40" oninput="setVolume(this.value)" />
+    </div>
+  </div>
+
+  <!-- Units Toggle -->
+  <div class="units-toggle" id="units-toggle">
+    <button class="unit-btn active" id="btn-celsius" onclick="setUnit('C')">°C</button>
+    <span class="unit-divider">|</span>
+    <button class="unit-btn" id="btn-fahrenheit" onclick="setUnit('F')">°F</button>
+  </div>
+
+  <!-- About Button -->
+  <button class="about-btn" onclick="openAbout()" title="About this app">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+  </button>
+
+  <!-- About Modal Overlay -->
+  <div class="about-overlay" id="about-overlay" onclick="closeAboutOutside(event)">
+    <div class="about-modal glass-card" id="about-modal">
+      <button class="about-close-btn" onclick="closeAbout()" title="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="about-icon">🌤️</div>
+      <h2 class="about-title">About This App</h2>
+
+      <p class="about-desc">
+        This weather application was created by <strong>Shivam Jha</strong>.<br>
+        It is designed to provide an immersive weather experience with animated environments,
+        realistic sound effects, and dynamic weather themes.
+      </p>
+
+      <div class="about-dev-card glass-card">
+        <div class="about-dev-icon">👨‍💻</div>
+        <div>
+          <div class="about-dev-label">Developer</div>
+          <div class="about-dev-name">Shivam Jha</div>
+        </div>
+      </div>
+
+      <div class="about-features">
+        <div class="about-features-title">Features</div>
+        <ul class="about-features-list">
+          <li>
+            <span class="feat-dot">✦</span>
+            Real-time weather data
+          </li>
+          <li>
+            <span class="feat-dot">✦</span>
+            Animated sky environment
+          </li>
+          <li>
+            <span class="feat-dot">✦</span>
+            Dynamic weather themes
+          </li>
+          <li>
+            <span class="feat-dot">✦</span>
+            Ambient nature sound system
+          </li>
+          <li>
+            <span class="feat-dot">✦</span>
+            Smooth modern UI
+          </li>
+        </ul>
+      </div>
+
+      <div class="about-footer">Created with ❤️ by Shivam Jha</div>
+    </div>
+  </div>
+
+  <!-- Main App Container -->
+  <div class="app-container" id="app-container">
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="search-input" placeholder="Search city..." autocomplete="off" oninput="handleSearch(this.value)" onkeydown="handleSearchKey(event)" />
+        <button class="locate-btn" onclick="detectLocation()" title="Use my location">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v4M12 19v4M1 12h4M19 12h4"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="autocomplete-dropdown" id="autocomplete-dropdown"></div>
+    </div>
+
+    <!-- Loading Skeleton -->
+    <div class="loading-skeleton" id="loading-skeleton">
+      <div class="skel skel-location"></div>
+      <div class="skel skel-temp"></div>
+      <div class="skel skel-condition"></div>
+      <div class="skel-details">
+        <div class="skel skel-detail"></div>
+        <div class="skel skel-detail"></div>
+        <div class="skel skel-detail"></div>
+        <div class="skel skel-detail"></div>
+      </div>
+    </div>
+
+    <!-- Weather Content -->
+    <div class="weather-content" id="weather-content" style="display:none">
+
+      <div class="location-section">
+        <div class="location-name" id="location-name">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span id="city-name">Loading...</span>
+        </div>
+        <div class="datetime-display">
+          <span id="current-date"></span>
+          <span class="time-sep">·</span>
+          <span id="current-time"></span>
+        </div>
+      </div>
+
+      <div class="main-weather">
+        <div class="weather-icon-wrap">
+          <div class="weather-icon-animated" id="weather-icon-animated"></div>
+        </div>
+        <div class="temp-display">
+          <span class="temp-value" id="temp-value">--</span>
+          <span class="temp-unit" id="temp-unit-display">°C</span>
+        </div>
+        <div class="condition-text" id="condition-text">--</div>
+        <div class="feels-like" id="feels-like">Feels like --°</div>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-card glass-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+            </svg>
+          </div>
+          <div class="detail-value" id="detail-humidity">--%</div>
+          <div class="detail-label">Humidity</div>
+        </div>
+        <div class="detail-card glass-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path>
+            </svg>
+          </div>
+          <div class="detail-value" id="detail-wind">-- km/h</div>
+          <div class="detail-label">Wind</div>
+        </div>
+        <div class="detail-card glass-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </div>
+          <div class="detail-value" id="detail-sunrise">--:--</div>
+          <div class="detail-label">Sunrise</div>
+        </div>
+        <div class="detail-card glass-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M17 18a5 5 0 0 0-10 0"></path>
+              <line x1="12" y1="9" x2="12" y2="2"></line>
+              <line x1="4.22" y1="10.22" x2="5.64" y2="11.64"></line>
+              <line x1="1" y1="18" x2="3" y2="18"></line>
+              <line x1="21" y1="18" x2="23" y2="18"></line>
+              <line x1="18.36" y1="11.64" x2="19.78" y2="10.22"></line>
+            </svg>
+          </div>
+          <div class="detail-value" id="detail-sunset">--:--</div>
+          <div class="detail-label">Sunset</div>
+        </div>
+      </div>
+
+      <div class="forecast-section">
+        <div class="forecast-label">Hourly Forecast</div>
+        <div class="hourly-scroll" id="hourly-scroll"></div>
+      </div>
+
+      <div class="forecast-section">
+        <div class="forecast-label">7-Day Forecast</div>
+        <div class="weekly-scroll" id="weekly-scroll"></div>
+      </div>
+
+    </div><!-- end weather-content -->
+
+    <!-- Error State -->
+    <div class="error-state" id="error-state" style="display:none">
+      <div class="error-icon">⚠️</div>
+      <div class="error-msg" id="error-msg">Unable to fetch weather data.</div>
+      <button class="retry-btn" onclick="retryFetch()">Try Again</button>
+    </div>
+
+  </div><!-- end app-container -->
+
+  <audio id="audio-rain" loop></audio>
+  <audio id="audio-wind" loop></audio>
+  <audio id="audio-birds" loop></audio>
+  <audio id="audio-night" loop></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
